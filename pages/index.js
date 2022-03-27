@@ -23,7 +23,7 @@ export default function Home() {
           handleOnClick={handleOnBannerBtnClick}
         />
         <div className={styles.heroImage}>
-          <Image src="/hero-image.png" width={700} height={400} />
+          <Image src="/static/hero-image.png" width={700} height={400} />
         </div>
       </main>
     </div>
