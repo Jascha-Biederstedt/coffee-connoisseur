@@ -6,10 +6,18 @@ import coffeeStores from '../data/coffee-stores.json';
 
 import styles from '../styles/Home.module.css';
 
-export default function Home() {
+export async function getStaticProps(context) {
+  return {
+    props: { coffeeStores },
+  };
+}
+
+export default function Home({ coffeeStores }) {
   const handleOnBannerBtnClick = () => {
     console.log('Btn clicked');
   };
+
+  console.log('props -->', coffeeStores);
 
   return (
     <div className={styles.container}>
@@ -31,6 +39,7 @@ export default function Home() {
           {coffeeStores.map(coffeeStore => {
             return (
               <Card
+                key={coffeeStore.id}
                 className={styles.card}
                 name={coffeeStore.name}
                 imgUrl={coffeeStore.imgUrl}
