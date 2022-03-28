@@ -26,11 +26,14 @@ export default function Home() {
         <div className={styles.heroImage}>
           <Image src="/static/hero-image.png" width={700} height={400} />
         </div>
-        <Card
-          name="Testname"
-          imgUrl="/static/hero-image.png"
-          href="/coffee-store/Testname"
-        />
+        <div className={styles.cardLayout}>
+          <Card
+            className={styles.card}
+            name="Testname"
+            imgUrl="/static/hero-image.png"
+            href="/coffee-store/Testname"
+          />
+        </div>
       </main>
     </div>
   );
