@@ -2,13 +2,26 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Banner from '../components/Banner';
 import Card from '../components/Card';
-import coffeeStoresData from '../data/coffee-stores.json';
 
 import styles from '../styles/Home.module.css';
 
 export async function getStaticProps(context) {
+  const options = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: process.env.FOURSQUARE_API_KEY,
+    },
+  };
+
+  const response = await fetch(
+    'https://api.foursquare.com/v3/places/search?query=cafe&ll=52.519406628133474%2C13.401662014630679&limit=6',
+    options
+  );
+  const data = await response.json();
+
   return {
-    props: { coffeeStores: coffeeStoresData },
+    props: { coffeeStores: data.results },
   };
 }
 
@@ -40,11 +53,14 @@ export default function Home({ coffeeStores }) {
               {coffeeStores.map(coffeeStore => {
                 return (
                   <Card
-                    key={coffeeStore.id}
+                    key={coffeeStore.fsq_id}
                     className={styles.card}
                     name={coffeeStore.name}
-                    imgUrl={coffeeStore.imgUrl}
-                    href={`/coffee-store/${coffeeStore.id}`}
+                    imgUrl={
+                      coffeeStore.imgUrl ||
+                      'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'
+                    }
+                    href={`/coffee-store/${coffeeStore.name}`}
                   />
                 );
               })}
