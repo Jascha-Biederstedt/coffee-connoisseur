@@ -37,7 +37,7 @@ export default function Home({ coffeeStores }) {
         </div>
         {coffeeStores.length > 0 && (
           <>
-            <h2 className={styles.heading2}>Toronto Stores</h2>
+            <h2 className={styles.heading2}>Berlin Stores</h2>
             <div className={styles.cardLayout}>
               {coffeeStores.map(coffeeStore => {
                 return (
