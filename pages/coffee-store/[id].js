@@ -43,7 +43,7 @@ const CoffeeStore = ({ coffeeStore }) => {
     return <div>Loading...</div>;
   }
 
-  const { name, address, neighbourhood, imgUrl } = coffeeStore;
+  const { name, location, related_places, imgUrl } = coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log('Up Voted!');
@@ -80,12 +80,14 @@ const CoffeeStore = ({ coffeeStore }) => {
         <div className={cls('glass', styles.col2)}>
           <div className={styles.iconWrapper}>
             <Image src="/static/icons/places.svg" width={24} height={24} />
-            <p className={styles.text}>{address}</p>
+            <p className={styles.text}>{location.formatted_address}</p>
           </div>
-          <div className={styles.iconWrapper}>
-            <Image src="/static/icons/nearMe.svg" width={24} height={24} />
-            <p className={styles.text}>{neighbourhood}</p>
-          </div>
+          {related_places.parent && (
+            <div className={styles.iconWrapper}>
+              <Image src="/static/icons/nearMe.svg" width={24} height={24} />
+              <p className={styles.text}>{related_places.parent.name}</p>
+            </div>
+          )}
           <div className={styles.iconWrapper}>
             <Image src="/static/icons/star.svg" width={24} height={24} />
             <p className={styles.text}>1</p>
