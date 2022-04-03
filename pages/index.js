@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Banner from '../components/Banner';
@@ -16,10 +17,30 @@ export async function getStaticProps(context) {
 }
 
 export default function Home({ coffeeStores }) {
-  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } =
-    useTrackLocation();
+  const {
+    handleTrackLocation,
+    latitude,
+    longitude,
+    locationErrorMsg,
+    isFindingLocation,
+  } = useTrackLocation();
 
-  console.log({ latLong, locationErrorMsg });
+  console.log({ latitude, longitude, locationErrorMsg });
+
+  useEffect(async () => {
+    if (latitude && longitude) {
+      try {
+        const fetchedCoffeeStores = await fetchCoffeeStores(
+          latitude,
+          longitude,
+          30
+        );
+        console.log({ fetchedCoffeeStores });
+      } catch (error) {
+        console.log({ error });
+      }
+    }
+  }, [latitude, longitude]);
 
   const handleOnBannerBtnClick = () => {
     console.log('Btn clicked');
