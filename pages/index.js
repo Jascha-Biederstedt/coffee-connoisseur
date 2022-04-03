@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Banner from '../components/Banner';
@@ -17,6 +17,9 @@ export async function getStaticProps(context) {
 }
 
 export default function Home({ coffeeStores }) {
+  const [coffeeStoresUser, setCoffeeStoresUser] = useState('');
+  const [coffeeStoresUserError, setCoffeeStoresUserError] = useState(null);
+
   const {
     handleTrackLocation,
     latitude,
@@ -35,9 +38,10 @@ export default function Home({ coffeeStores }) {
           longitude,
           30
         );
-        console.log({ fetchedCoffeeStores });
+        setCoffeeStoresUser(fetchedCoffeeStores);
       } catch (error) {
         console.log({ error });
+        setCoffeeStoresUserError(error.message);
       }
     }
   }, [latitude, longitude]);
@@ -60,10 +64,38 @@ export default function Home({ coffeeStores }) {
           buttonText={isFindingLocation ? 'Locating...' : 'View stores nearby'}
           handleOnClick={handleOnBannerBtnClick}
         />
+
         {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
+        {coffeeStoresUserError && (
+          <p>Something went wrong: {coffeeStoresUserError}</p>
+        )}
+
         <div className={styles.heroImage}>
           <Image src="/static/hero-image.png" width={700} height={400} />
         </div>
+
+        {coffeeStoresUser.length > 0 && (
+          <div className={styles.sectionWrapper}>
+            <h2 className={styles.heading2}>Stores near me</h2>
+            <div className={styles.cardLayout}>
+              {coffeeStoresUser.map(coffeeStore => {
+                return (
+                  <Card
+                    key={coffeeStore.fsq_id}
+                    className={styles.card}
+                    name={coffeeStore.name}
+                    imgUrl={
+                      coffeeStore.imgUrl ||
+                      'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'
+                    }
+                    href={`/coffee-store/${coffeeStore.fsq_id}`}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Berlin Stores</h2>
