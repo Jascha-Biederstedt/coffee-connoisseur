@@ -11,12 +11,13 @@ import { fetchCoffeeStores } from '../../lib/coffee-stores';
 
 export async function getStaticProps({ params }) {
   const coffeeStores = await fetchCoffeeStores();
+  const findCoffeeStoreById = coffeeStores.find(coffeeStore => {
+    return coffeeStore.fsq_id.toString() === params.id;
+  });
 
   return {
     props: {
-      coffeeStore: coffeeStores.find(coffeeStore => {
-        return coffeeStore.fsq_id.toString() === params.id;
-      }),
+      coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
     },
   };
 }
@@ -43,7 +44,12 @@ const CoffeeStore = ({ coffeeStore }) => {
     return <div>Loading...</div>;
   }
 
-  const { name, location, related_places, imgUrl } = coffeeStore;
+  const {
+    name = '',
+    location = '',
+    related_places = '',
+    imgUrl = '',
+  } = coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log('Up Voted!');
