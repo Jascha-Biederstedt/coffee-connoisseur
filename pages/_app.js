@@ -1,9 +1,9 @@
 import { createContext, useReducer } from 'react';
 import '../styles/globals.css';
 
-const StoreContext = createContext();
+export const StoreContext = createContext();
 
-const ACTION_TYPES = {
+export const ACTION_TYPES = {
   SET_LATITUDE: 'SET_LATITUDE',
   SET_LONGITUDE: 'SET_LONGITUDE',
   SET_COFFEE_STORES: 'SET_COFFEE_STORES',
@@ -14,7 +14,7 @@ const storeReducer = (state, action) => {
     case ACTION_TYPES.SET_LATITUDE:
       return { ...state, latitude: action.payload.latitude };
     case ACTION_TYPES.SET_LONGITUDE:
-      return { ...state, latitude: action.payload.longitude };
+      return { ...state, longitude: action.payload.longitude };
     case ACTION_TYPES.SET_COFFEE_STORES:
       return { ...state, coffeeStores: action.payload.coffeeStores };
     default:

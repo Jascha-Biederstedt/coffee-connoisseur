@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Banner from '../components/Banner';
 import Card from '../components/Card';
 import { fetchCoffeeStores } from '../lib/coffee-stores';
 import useTrackLocation from '../hooks/use-track-location';
+import { ACTION_TYPES, StoreContext } from '../pages/_app';
 
 import styles from '../styles/Home.module.css';
 
@@ -17,13 +18,16 @@ export async function getStaticProps(context) {
 }
 
 export default function Home({ coffeeStores }) {
-  const [coffeeStoresUser, setCoffeeStoresUser] = useState('');
+  // const [coffeeStoresUser, setCoffeeStoresUser] = useState('');
   const [coffeeStoresUserError, setCoffeeStoresUserError] = useState(null);
+
+  const { dispatch, state } = useContext(StoreContext);
+  const { latitude, longitude } = state;
 
   const {
     handleTrackLocation,
-    latitude,
-    longitude,
+    // latitude,
+    // longitude,
     locationErrorMsg,
     isFindingLocation,
   } = useTrackLocation();
@@ -38,7 +42,11 @@ export default function Home({ coffeeStores }) {
           longitude,
           30
         );
-        setCoffeeStoresUser(fetchedCoffeeStores);
+        // setCoffeeStoresUser(fetchedCoffeeStores);
+        dispatch({
+          type: ACTION_TYPES.SET_COFFEE_STORES,
+          payload: { coffeeStores: fetchedCoffeeStores },
+        });
       } catch (error) {
         console.log({ error });
         setCoffeeStoresUserError(error.message);
@@ -74,11 +82,11 @@ export default function Home({ coffeeStores }) {
           <Image src="/static/hero-image.png" width={700} height={400} />
         </div>
 
-        {coffeeStoresUser.length > 0 && (
+        {state.coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Stores near me</h2>
             <div className={styles.cardLayout}>
-              {coffeeStoresUser.map(coffeeStore => {
+              {state.coffeeStores.map(coffeeStore => {
                 return (
                   <Card
                     key={coffeeStore.fsq_id}
