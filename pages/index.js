@@ -37,16 +37,18 @@ export default function Home({ coffeeStores }) {
   useEffect(async () => {
     if (latitude && longitude) {
       try {
-        const fetchedCoffeeStores = await fetchCoffeeStores(
-          latitude,
-          longitude,
-          30
+        const response = await fetch(
+          `/api/getCoffeeStoresByLocation?latitude=${latitude}&longitude=${longitude}&limit=30`
         );
-        // setCoffeeStoresUser(fetchedCoffeeStores);
+
+        const coffeeStores = await response.json();
+
         dispatch({
           type: ACTION_TYPES.SET_COFFEE_STORES,
-          payload: { coffeeStores: fetchedCoffeeStores },
+          payload: { coffeeStores },
         });
+
+        setCoffeeStoresUserError('');
       } catch (error) {
         console.log({ error });
         setCoffeeStoresUserError(error.message);
