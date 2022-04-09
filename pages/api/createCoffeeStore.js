@@ -5,4 +5,20 @@ const base = new Airtable({
 
 const table = base('coffee-stores');
 
-console.log(table);
+const createCoffeeStore = async (req, res) => {
+  if (req.method === 'POST') {
+    const findCoffeeStoreRecords = await table
+      .select({ filterByFormula: `id='0'` })
+      .firstPage();
+
+    console.log({ findCoffeeStoreRecords });
+
+    if (findCoffeeStoreRecords.length !== 0) {
+      res.json(findCoffeeStoreRecords);
+    } else {
+      res.json({ message: 'create a record' });
+    }
+  }
+};
+
+export default createCoffeeStore;
