@@ -52,13 +52,53 @@ const CoffeeStore = initialProps => {
     state: { coffeeStores },
   } = useContext(StoreContext);
 
+  const handleCreateCoffeeStore = async coffeeStore => {
+    try {
+      const { name, imgUrl } = coffeeStore;
+      const id = coffeeStore.fsq_id;
+      const address = coffeeStore.location.formatted_address;
+
+      let neighbourhood = '';
+
+      if (
+        coffeeStore.related_places &&
+        coffeeStore.related_places.parent &&
+        coffeeStore.related_places.parent.name
+      ) {
+        neighbourhood = coffeeStore.related_places.parent.name;
+      }
+
+      const response = await fetch('/api/createCoffeeStore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          name,
+          address,
+          neighbourhood,
+          voting: 0,
+          imgUrl,
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+      console.log(dbCoffeeStore);
+    } catch (error) {
+      console.error('Error creating coffee store', error);
+    }
+  };
+
   useEffect(() => {
     if (isEmpty(initialProps.coffeeStore)) {
       if (coffeeStores.length > 0) {
-        const findCoffeeStoreById = coffeeStores.find(coffeeStore => {
+        const coffeeStoreFromContext = coffeeStores.find(coffeeStore => {
           return coffeeStore.fsq_id.toString() === id;
         });
-        setCoffeeStore(findCoffeeStoreById);
+
+        if (coffeeStoreFromContext) {
+          setCoffeeStore(coffeeStoreFromContext);
+          handleCreateCoffeeStore(coffeeStoreFromContext);
+        }
       }
     }
   }, [id]);
