@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
 import cls from 'classnames';
+import useSWR from 'swr';
 
 import styles from '../../styles/coffee-store.module.css';
 
@@ -112,12 +113,28 @@ const CoffeeStore = initialProps => {
     imgUrl = '',
   } = coffeeStore;
 
-  const [votingCount, setVotingCount] = useState(1);
+  const [votingCount, setVotingCount] = useState(0);
+
+  const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, url =>
+    fetch(url).then(res => res.json())
+  );
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      console.log('data from SWR', data);
+      // setCoffeeStore(data[0]);
+      setVotingCount(data[0].voting);
+    }
+  }, [data]);
 
   const handleUpvoteButton = () => {
     const count = votingCount + 1;
     setVotingCount(count);
   };
+
+  if (error) {
+    return <div>Something went wrong retrieving coffee store page</div>;
+  }
 
   return (
     <div className={styles.layout}>
