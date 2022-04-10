@@ -127,9 +127,28 @@ const CoffeeStore = initialProps => {
     }
   }, [data]);
 
-  const handleUpvoteButton = () => {
-    const count = votingCount + 1;
-    setVotingCount(count);
+  const handleUpvoteButton = async () => {
+    try {
+      // const id = coffeeStore.fsq_id;
+
+      const response = await fetch('/api/upvoteCoffeeStoreById', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+      console.log(dbCoffeeStore);
+
+      if (dbCoffeeStore && dbCoffeeStore.length > 0) {
+        const count = votingCount + 1;
+        setVotingCount(count);
+      }
+    } catch (error) {
+      console.error('Error upvoting coffee store', error);
+    }
   };
 
   if (error) {
