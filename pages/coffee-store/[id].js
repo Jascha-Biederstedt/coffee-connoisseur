@@ -83,7 +83,6 @@ const CoffeeStore = initialProps => {
       });
 
       const dbCoffeeStore = await response.json();
-      console.log(dbCoffeeStore);
     } catch (error) {
       console.error('Error creating coffee store', error);
     }
@@ -121,16 +120,26 @@ const CoffeeStore = initialProps => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      console.log('data from SWR', data);
-      // setCoffeeStore(data[0]);
+      const dataCoffeeStore = {
+        fsq_id: data[0].id,
+        name: data[0].name,
+        location: { formatted_address: data[0].address },
+        imgUrl: data[0].imgUrl,
+      };
+
+      if (data[0].neighbourhood) {
+        dataCoffeeStore.related_places = {};
+        dataCoffeeStore.related_places.parent = {};
+        dataCoffeeStore.related_places.parent.name = data[0].neighbourhood;
+      }
+
+      setCoffeeStore(dataCoffeeStore);
       setVotingCount(data[0].voting);
     }
   }, [data]);
 
   const handleUpvoteButton = async () => {
     try {
-      // const id = coffeeStore.fsq_id;
-
       const response = await fetch('/api/upvoteCoffeeStoreById', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -140,7 +149,6 @@ const CoffeeStore = initialProps => {
       });
 
       const dbCoffeeStore = await response.json();
-      console.log(dbCoffeeStore);
 
       if (dbCoffeeStore && dbCoffeeStore.length > 0) {
         const count = votingCount + 1;

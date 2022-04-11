@@ -18,21 +18,13 @@ export async function getStaticProps(context) {
 }
 
 export default function Home({ coffeeStores }) {
-  // const [coffeeStoresUser, setCoffeeStoresUser] = useState('');
   const [coffeeStoresUserError, setCoffeeStoresUserError] = useState(null);
 
   const { dispatch, state } = useContext(StoreContext);
   const { latitude, longitude } = state;
 
-  const {
-    handleTrackLocation,
-    // latitude,
-    // longitude,
-    locationErrorMsg,
-    isFindingLocation,
-  } = useTrackLocation();
-
-  console.log({ latitude, longitude, locationErrorMsg });
+  const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
+    useTrackLocation();
 
   useEffect(async () => {
     if (latitude && longitude) {
@@ -50,14 +42,12 @@ export default function Home({ coffeeStores }) {
 
         setCoffeeStoresUserError('');
       } catch (error) {
-        console.log({ error });
         setCoffeeStoresUserError(error.message);
       }
     }
   }, [latitude, longitude]);
 
   const handleOnBannerBtnClick = () => {
-    console.log('Btn clicked');
     handleTrackLocation();
   };
 

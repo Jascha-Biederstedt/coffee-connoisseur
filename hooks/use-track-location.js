@@ -3,8 +3,6 @@ import { ACTION_TYPES, StoreContext } from '../store/store-context';
 
 const useTrackLocation = () => {
   const [locationErrorMsg, setLocationErrorMsg] = useState('');
-  // const [latitude, setLatitude] = useState('');
-  // const [longitude, setLongitude] = useState('');
   const [isFindingLocation, setIsFindingLocation] = useState(false);
 
   const { dispatch } = useContext(StoreContext);
@@ -13,8 +11,6 @@ const useTrackLocation = () => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    // setLatitude(latitude);
-    // setLongitude(longitude);
     dispatch({
       type: ACTION_TYPES.SET_LATITUDE,
       payload: { latitude },
@@ -39,14 +35,11 @@ const useTrackLocation = () => {
       setLocationErrorMsg('Geolocation is not supported by your browser');
       setIsFindingLocation(false);
     } else {
-      // status.textContent = 'Locating…';
       navigator.geolocation.getCurrentPosition(success, error);
     }
   };
 
   return {
-    // latitude,
-    // longitude,
     handleTrackLocation,
     locationErrorMsg,
     isFindingLocation,
