@@ -26,26 +26,30 @@ export default function Home({ coffeeStores }) {
   const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
-  useEffect(async () => {
-    if (latitude && longitude) {
-      try {
-        const response = await fetch(
-          `/api/getCoffeeStoresByLocation?latitude=${latitude}&longitude=${longitude}&limit=30`
-        );
+  useEffect(() => {
+    const setCoffeeStoresByLocation = async () => {
+      if (latitude && longitude) {
+        try {
+          const response = await fetch(
+            `/api/getCoffeeStoresByLocation?latitude=${latitude}&longitude=${longitude}&limit=30`
+          );
 
-        const coffeeStores = await response.json();
+          const coffeeStores = await response.json();
 
-        dispatch({
-          type: ACTION_TYPES.SET_COFFEE_STORES,
-          payload: { coffeeStores },
-        });
+          dispatch({
+            type: ACTION_TYPES.SET_COFFEE_STORES,
+            payload: { coffeeStores },
+          });
 
-        setCoffeeStoresUserError('');
-      } catch (error) {
-        setCoffeeStoresUserError(error.message);
+          setCoffeeStoresUserError('');
+        } catch (error) {
+          setCoffeeStoresUserError(error.message);
+        }
       }
-    }
-  }, [latitude, longitude]);
+    };
+
+    setCoffeeStoresByLocation();
+  }, [latitude, longitude, dispatch]);
 
   const handleOnBannerBtnClick = () => {
     handleTrackLocation();

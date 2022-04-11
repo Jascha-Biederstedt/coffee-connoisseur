@@ -103,7 +103,7 @@ const CoffeeStore = initialProps => {
     } else {
       handleCreateCoffeeStore(initialProps.coffeeStore);
     }
-  }, [id, initialProps, initialProps.coffeeStore]);
+  }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
 
   const {
     name = '',
